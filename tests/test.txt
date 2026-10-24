@@ -1,0 +1,6 @@
+ls
+cd $HOME
+ls $USER
+command_test
+ls 1
+exit
