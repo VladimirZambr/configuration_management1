@@ -1,5 +1,8 @@
 package emulator;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,21 +12,47 @@ import java.util.regex.Pattern;
 
 public class Shell {
     private final String vfsName;
+    private final String vfsPhysicalPath;
     private boolean running = true;
     private static final Pattern ENV_VAR = Pattern.compile("\\$([a-zA-Z_][a-zA-Z0-9_]*)");
 
-    public Shell(String vfsName) {
+    public Shell(String vfsName, String vfsPhysicalPath) {
         this.vfsName = vfsName;
+        this.vfsPhysicalPath = vfsPhysicalPath;
     }
 
     public void startInteractive() {
-        Scanner scanner = new Scanner(System.in);
-        while (running) {
-            System.out.print(vfsName + ":/$ ");
-            if (!scanner.hasNextLine()) {
-                break;
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (running) {
+                System.out.print(vfsName + ":/$ ");
+                if (!scanner.hasNextLine()) {
+                    break;
+                }
+                executeLine(scanner.nextLine());
             }
-            executeLine(scanner.nextLine());
+        }
+    }
+
+    public void executeScript(String scriptPath) {
+        System.out.println("Executing script: " + scriptPath);
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(scriptPath))) {
+            String rawLine;
+            while ((rawLine = reader.readLine()) != null) {
+                String line = rawLine.trim();
+
+                if (line.isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
+                System.out.print(vfsName + ":/$ ");
+                System.out.println(line);
+                executeLine(line);
+                if (!running) {
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("[ERROR] Failed to execute script file: " + scriptPath + " (" + e.getMessage() + ")");
         }
     }
 
