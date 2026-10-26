@@ -11,14 +11,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Shell {
+    private VFS vfs;
     private final String vfsName;
-    private final String vfsPhysicalPath;
+    private final String vfsPath;
     private boolean running = true;
     private static final Pattern ENV_VAR = Pattern.compile("\\$([a-zA-Z_][a-zA-Z0-9_]*)");
 
-    public Shell(String vfsName, String vfsPhysicalPath) {
+    public Shell(String vfsName, String vfsPath) {
         this.vfsName = vfsName;
-        this.vfsPhysicalPath = vfsPhysicalPath;
+        this.vfsPath = vfsPath;
+        this.vfs = new VFS(vfsPath);
     }
 
     public void startInteractive() {
@@ -68,8 +70,24 @@ public class Shell {
 
         switch (cmd) {
             case "exit" -> running = false;
-            case "ls", "cd" -> System.out.println("Command: " + cmd + ", arguments: " + args);
-            default -> System.err.println("Error: unknown command or invalid arguments: " + cmd);
+            case "ls" -> {
+                List<String> items = vfs.listDirectory();
+                for (String item : items) {
+                    System.out.println(item);
+                }
+            }
+            case "cd" -> {
+                if (args.isEmpty()) {
+                    System.out.println("cd: missing path argument");
+                } else {
+                    String path = args.get(0);
+                    boolean success = vfs.changeDirectory(path);
+                    if (!success) {
+                        System.out.println("cd: no such file or directory: " + path);
+                    }
+                }
+            }
+            default -> System.err.println("[ERROR] Unknown command or invalid arguments: " + cmd);
         }
     }
 

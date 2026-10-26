@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vfs>
+    <dir name="root">
+        <file name="readme.txt">big VFS</file>
+        <dir name="documents">
+            <dir name="local">
+                <dir name="bin">
+                    <file name="binary.bin" encoding="base64">YmlnIHZmcw==</file>
+                </dir>
+            </dir>
+        </dir>
+    </dir>
+</vfs>

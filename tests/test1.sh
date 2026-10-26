@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp out emulator.Main "./test_vfs" "tests/test.txt"
+java -cp out emulator.Main "VFS/VFS_minimal.xml" "tests/test.txt"

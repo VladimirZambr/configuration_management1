@@ -1,6 +1,10 @@
 ls
-cd $HOME
-ls $USER
-command_test
-ls 1
+cd documents
+ls
+cd ..
+ls
+cd test
+cd documents
+cd /
+ls
 exit

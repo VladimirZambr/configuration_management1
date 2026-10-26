@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vfs>
+    <dir name="root">
+        <file name="readme.txt">medium VFS</file>
+        <file name="binary.bin" encoding="base64">bWVkaXVtIFZGUw==</file>
+        <dir name="documents">
+            <file name="notes.txt">notes</file>
+        </dir>
+    </dir>
+</vfs>
