@@ -1,3 +1,4 @@
+help
 ls
 cd documents
 ls
@@ -15,4 +16,17 @@ find test
 test
 echo $USER
 echo $HOME
+cd /
+mkdir newDir
+mkdir newDir/newDir2
+cd newDir
+mkdir /documents/newDir3
+cd /
+find newDir
+rm newDir/newDir2 /documents/newDir3
+rm readme.txt
+ls
+find newDir
+rm test
+mkdir /docs/testdir
 exit

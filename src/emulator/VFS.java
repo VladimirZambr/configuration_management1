@@ -178,4 +178,89 @@ public class VFS {
             }
         }
     }
+
+    public boolean makeDirectory(String path) {
+        if (path == null || path.isEmpty()) {
+            return false;
+        }
+
+        Node targetParent = currentDir;
+        String dirName = path;
+
+        if (path.contains("/")) {
+            int lastSlash = path.lastIndexOf('/');
+            String parentPath = path.substring(0, lastSlash);
+            dirName = path.substring(lastSlash + 1);
+
+            Node current = parentPath.startsWith("/") ? root : currentDir;
+
+            if (!parentPath.isEmpty() && !parentPath.equals("/")) {
+                String[] segments = parentPath.split("/");
+                for (String segment : segments) {
+                    if (segment.isEmpty()) {
+                        continue;
+                    }
+                    if (current.children.containsKey(segment)) {
+                        Node next = current.children.get(segment);
+                        if (next.isDirectory) {
+                            current = next;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            targetParent = current;
+        }
+        if (dirName.isEmpty() || targetParent.children.containsKey(dirName)) {
+            return false;
+        }
+        Node newDir = new Node(dirName, true, targetParent);
+        targetParent.children.put(dirName, newDir);
+        return true;
+    }
+
+    public boolean remove(String path) {
+        if (path == null || path.isEmpty() || path.equals("/")) {
+            return false;
+        }
+
+        Node targetParent = currentDir;
+        String nodeName = path;
+
+        if (path.contains("/")) {
+            int lastSlash = path.lastIndexOf('/');
+            String parentPath = path.substring(0, lastSlash);
+            nodeName = path.substring(lastSlash + 1);
+
+            Node current = parentPath.startsWith("/") ? root : currentDir;
+
+            if (!parentPath.isEmpty() && !parentPath.equals("/")) {
+                String[] segments = parentPath.split("/");
+                for (String segment : segments) {
+                    if (segment.isEmpty()) {
+                        continue;
+                    }
+                    if (current.children.containsKey(segment)) {
+                        Node next = current.children.get(segment);
+                        if (next.isDirectory) {
+                            current = next;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            targetParent = current;
+        }
+        if (nodeName.isEmpty() || !targetParent.children.containsKey(nodeName)) {
+            return false;
+        }
+        targetParent.children.remove(nodeName);
+        return true;
+    }
 }

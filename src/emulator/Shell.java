@@ -106,6 +106,40 @@ public class Shell {
                     }
                 }
             }
+            case "mkdir" -> {
+                if (args.isEmpty()) {
+                    System.out.println("mkdir: missing argument");
+                } else {
+                    String path = args.get(0);
+                    boolean success = vfs.makeDirectory(path);
+                    if (!success) {
+                        System.out.println("mkdir: cannot create directory " + path);
+                    }
+                }
+            }
+            case "rm" -> {
+                if (args.isEmpty()) {
+                    System.out.println("rm: missing argument");
+                } else {
+                    for(String path : args) {
+                        boolean success = vfs.remove(path);
+                        if (!success) {
+                            System.out.println("rm: no such file or directory " + path);
+                        }
+                    }
+                }
+            }
+            case "help" -> {
+                System.out.println("Available commands:");
+                System.out.println("  ls                 - List directory contents");
+                System.out.println("  cd <path>          - Change current directory");
+                System.out.println("  mkdir <path>       - Create a new directory");
+                System.out.println("  rm <path/paths>    - Remove a file or directory");
+                System.out.println("  find <name>        - Search for files or directories");
+                System.out.println("  echo <text>        - Print text to standard output");
+                System.out.println("  help               - Display help message");
+                System.out.println("  exit               - Exit the emulator");
+            }
             default -> System.out.println("[ERROR] Unknown command or invalid arguments: " + cmd);
         }
     }
