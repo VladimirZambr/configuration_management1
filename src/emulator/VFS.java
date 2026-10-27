@@ -109,6 +109,28 @@ public class VFS {
             currentDir = root;
             return true;
         }
+        if (path.startsWith("/")) {
+            String[] segments = path.split("/");
+            Node target = root;
+
+            for (String segment : segments) {
+                if (segment.isEmpty()) {
+                    continue;
+                }
+                if (target.children.containsKey(segment)) {
+                    Node next = target.children.get(segment);
+                    if (next.isDirectory) {
+                        target = next;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+            currentDir = target;
+            return true;
+        }
         if (currentDir.children.containsKey(path)) {
             Node target = currentDir.children.get(path);
             if (target.isDirectory) {
@@ -126,5 +148,34 @@ public class VFS {
             list.add(entry.getKey() + suffix);
         }
         return list;
+    }
+
+
+    public List<String> find(String searchArg) {
+        List<String> results = new ArrayList<>();
+        if (searchArg == null || searchArg.isEmpty()) {
+            return results;
+        }
+        recursiveFind(currentDir, "", searchArg, results);
+        return results;
+    }
+
+    private void recursiveFind(Node currentNode, String currentPath, String searchArg, List<String> results) {
+        if (currentNode == null) {
+            return;
+        }
+        for (Map.Entry<String, Node> entry : currentNode.children.entrySet()) {
+            String name = entry.getKey();
+            Node node = entry.getValue();
+            String fullPath = currentPath.equals("") ? "/" + name : currentPath + "/" + name;
+            if (name.equals(searchArg) || name.contains(searchArg)) {
+                if (!results.contains(fullPath)) {
+                    results.add(fullPath);
+                }
+            }
+            if (node.isDirectory) {
+                recursiveFind(node, fullPath, searchArg, results);
+            }
+        }
     }
 }

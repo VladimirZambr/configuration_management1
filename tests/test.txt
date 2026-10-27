@@ -7,4 +7,12 @@ cd test
 cd documents
 cd /
 ls
+find readme
+find bin
+cd /documents/local/
+ls
+find test
+test
+echo $USER
+echo $HOME
 exit

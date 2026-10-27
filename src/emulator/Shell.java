@@ -87,7 +87,26 @@ public class Shell {
                     }
                 }
             }
-            default -> System.err.println("[ERROR] Unknown command or invalid arguments: " + cmd);
+            case "echo" -> {
+                System.out.println(String.join(" ", args));
+            }
+            case "find" -> {
+
+                if (args.isEmpty()) {
+                    System.out.println("find: missing search argument");
+                    return;
+                }
+                String searchArg = args.get(0);
+                List<String> results = vfs.find(searchArg);
+                if (results.isEmpty()) {
+                    System.out.println("No matches found for: " + searchArg);
+                } else {
+                    for (String result : results) {
+                        System.out.println(result);
+                    }
+                }
+            }
+            default -> System.out.println("[ERROR] Unknown command or invalid arguments: " + cmd);
         }
     }
 
