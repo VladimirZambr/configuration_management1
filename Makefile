@@ -16,3 +16,12 @@ test: compile
 	@echo " "
 	@echo "[TEST BIG]"
 	bash tests/test3.sh
+
+run_min: compile
+	java -cp out emulator.Main "VFS/VFS_minimal.xml"
+	
+run_med: compile
+	java -cp out emulator.Main "VFS/VFS_medium.xml"
+	
+run_big: compile
+	java -cp out emulator.Main "VFS/VFS_big.xml"
